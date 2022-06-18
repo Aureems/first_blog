@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Bootstrap Table with Add and Delete Row Feature</title>
+<title>Django practice blog project</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -14,11 +14,13 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'modal.css' %}">
+    <script src="{% static 'modaljs.js' %}"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 <style>
 body {
     color: #404E67;
-    background: #F5F7FA;
+    background: moccasin;
     font-family: 'Open Sans', sans-serif;
 }
 .table-wrapper {
@@ -100,60 +102,8 @@ table.table td .add {
     display: none;
 }
 </style>
-<script>
-$(document).ready(function(){
-	$('[data-toggle="tooltip"]').tooltip();
-	var actions = $("table td:last-child").html();
-	// Append table with add row form on add new button click
-    $(".add-new").click(function(){
-		$(this).attr("disabled", "disabled");
-		var index = $("table tbody tr:last-child").index();
-        var row = '<tr>' +
-            '<td><input type="text" class="form-control" name="name" id="name"></td>' +
-            '<td><input type="text" class="form-control" name="department" id="department"></td>' +
-            '<td><input type="text" class="form-control" name="phone" id="phone"></td>' +
-			'<td>' + actions + '</td>' +
-        '</tr>';
-    	$("table").append(row);
-		$("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-	// Add row on add button click
-	$(document).on("click", ".add", function(){
-		var empty = false;
-		var input = $(this).parents("tr").find('input[type="text"]');
-        input.each(function(){
-			if(!$(this).val()){
-				$(this).addClass("error");
-				empty = true;
-			} else{
-                $(this).removeClass("error");
-            }
-		});
-		$(this).parents("tr").find(".error").first().focus();
-		if(!empty){
-			input.each(function(){
-				$(this).parent("td").html($(this).val());
-			});
-			$(this).parents("tr").find(".add, .edit").toggle();
-			$(".add-new").removeAttr("disabled");
-		}
-    });
-	// Edit row on edit button click
-	$(document).on("click", ".edit", function(){
-        $(this).parents("tr").find("td:not(:last-child)").each(function(){
-			$(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-		});
-		$(this).parents("tr").find(".add, .edit").toggle();
-		$(".add-new").attr("disabled", "disabled");
-    });
-	// Delete row on delete button click
-	$(document).on("click", ".delete", function(){
-        $(this).parents("tr").remove();
-		$(".add-new").removeAttr("disabled");
-    });
-});
-</script>
+
+
 </head>
 <body>
 {% block content %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block content %}
+{% include 'navigation.html' %}
+<div>
+  <form method="post">
+  {% csrf_token %}
+  {{form}}
+  <input class="btn btn-primary baton"  type="submit" value="Update">
+  </form>
+</div>
+{% endblock %}
