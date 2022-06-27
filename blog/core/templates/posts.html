@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block content %}
+{% include 'navigation.html' %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mt-3 left">
+            <h1>Posts</h1>
+            <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    {% for obj in filter.qs %}
+        {{ obj.title }} - ${{ obj.created }}<br />
+            {% endfor %}
+            <form method="get" action="{% url 'posts_create' %}">
+        <button class="btn btn-primary hBack" type="submit">Create post</button>
+        </form>
+            {% for post in posts_list %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <img src="{{post.image.url}}" alt="..." class="img-thumbnail" style="width: 100px;height: 100px">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created}} </p>
+                    <p class="card-text">{{post.content|slice:":200" }}</p>
+                    <a href="{% url 'posts_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+
+  <p>Please login</p>
+  <a href="{% url 'login_user' %}">Log In</a>
+{% endif %}
+
+{% endblock %}

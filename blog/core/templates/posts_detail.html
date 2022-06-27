@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block content %}
+{% include 'navigation.html' %}
+{% if user.is_authenticated %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 card mb-4  mt-3 left  top">
+      <div class="card-body">
+        <img src="{{posts.image.url}}" alt="..." class="img-thumbnail" style="width: 200px;height: 200px">
+        <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+        <p class=" text-muted">{{ posts.author }} | {{ posts.created }}</p>
+        <p class="card-text ">{{ object.content | safe }}</p>
+        <br>
+
+        <a class="btn btn-info " href="{% url 'posts_edit' posts.slug %}">Edit</a>
+        <br>
+        <form method="get" action="{% url 'posts' %}">
+        <button class="btn btn-primary hBack" type="submit">Back to Posts</button>
+        </form>
+        <form method="get" action="{% url 'posts_delete' posts.slug %}">
+        <button class="btn btn-primary hBack" type="submit">Delete post</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% else %}
+
+  <p>Please login</p>
+  <a href="{% url 'login_user' %}">Log In</a>
+{% endif %}
+
+{% endblock %}

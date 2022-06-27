@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block content %}
+{% include 'navigation.html' %}
+{% if user.is_authenticated %}
+ <form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+
+  <input class="btn btn-primary baton"  type="submit" value="Create">
+  </form>
+{% else %}
+
+  <p>Please login</p>
+  <a href="{% url 'login_user' %}">Log In</a>
+{% endif %}
+
+{% endblock %}

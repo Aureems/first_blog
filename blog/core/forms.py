@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Employee, User
+from .models import Employee, User, Posts, STATUS
 
 
 
@@ -34,3 +34,15 @@ class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['fullname', 'email', 'phone', 'mobile', 'address', 'job', 'photo']
+
+
+class PostsEditForm(forms.ModelForm):
+    title = forms.CharField(max_length=200)
+    slug = forms.SlugField(max_length=200)
+    content = forms.CharField(max_length=10000)
+    status = forms.ChoiceField(choices=STATUS)
+    image = forms.ImageField(max_length=100)
+
+    class Meta:
+        model = Posts
+        fields = ['title', 'slug', 'content', 'status', 'image']

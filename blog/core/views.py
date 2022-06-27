@@ -1,11 +1,12 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterForm, EmployeeForm
+from .forms import RegisterForm, EmployeeForm, PostsEditForm
 from django.contrib.auth import login, authenticate, logout
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView
-from .models import Employee, User
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
+from .models import Employee, User, Posts, PostFilter
+
 
 # Create your views here.
 
@@ -92,4 +93,50 @@ def edit_user(request):
     return render(request, 'edituser.html')
 
 
+class PostsList(ListView):
+    model = Posts
+    template_name = 'posts.html'
+    success_url = '/'
 
+    def post_list(self, request):
+        f = PostFilter(request.GET, queryset=Posts.objects.all())
+        return render(request, 'posts.html', {'filter': f})
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['items'] = Posts.objects.filter(created__date__range=("2022-06-19", "2022-06-19"))
+    #     return context
+
+
+class PostsDetail(DetailView):
+    model = Posts
+    template_name = 'posts_detail.html'
+
+
+class PostsEdit(UpdateView):
+    model = Posts
+    form_class = PostsEditForm
+    template_name = 'posts_edit.html'
+    success_url = reverse_lazy('posts')
+
+
+class PostsCreate(CreateView):
+    model = Posts
+    form_class = PostsEditForm
+    template_name = 'posts_create.html'
+    success_url = reverse_lazy('posts')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostsDelete(DeleteView):
+    model = Posts
+    template_name = 'posts_delete.html'
+    success_url = reverse_lazy('posts')
+
+
+def product_list(request):
+    f = PostFilter(request.GET, queryset=Posts.objects.all())
+    return render(request, 'posts.html', {'filter': f})

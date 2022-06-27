@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+import django_filters
+
 
 # Create your models here.
 
@@ -37,3 +39,40 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'address', 'phone']
 
+
+STATUS = (
+    (0, "Draft"),
+    (1, "Publish"),
+)
+
+
+class Posts(models.Model):
+    title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    author = models.EmailField(max_length=200, unique=True)
+    updated = models.DateTimeField(auto_now=True)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(choices=STATUS, default=0)
+    image = models.ImageField(null=True, upload_to='posts', default='Image')
+
+
+    class Meta:
+        ordering = ['-created']
+
+    def __str__(self):
+        return self.title
+
+
+class PostFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(lookup_expr='icontains')
+    title__gt = django_filters.CharFilter(field_name='title', lookup_expr='gt')
+    title__lt = django_filters.CharFilter(field_name='title', lookup_expr='lt')
+
+    created = django_filters.NumberFilter(field_name='created', lookup_expr='date')
+    created__gt = django_filters.NumberFilter(field_name='created', lookup_expr='date__gt')
+    created__lt = django_filters.NumberFilter(field_name='created', lookup_expr='date__lt')
+
+    class Meta:
+        model = Posts
+        fields = ['title', 'content', 'created', 'status']

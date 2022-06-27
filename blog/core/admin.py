@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Employee, User
+from .models import Employee, User, Posts
+from django_admin_filter.filters import CustomFilter
 
 
 # Register your models here.
@@ -16,3 +17,13 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
+
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'status', 'created')
+    list_filter = ("status",)
+    search_fields = ['title', 'content']
+    prepopulated_fields = {'slug': ('title',)}
+
+
+admin.site.register(Posts, PostAdmin)
